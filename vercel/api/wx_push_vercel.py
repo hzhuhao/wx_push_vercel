@@ -1,7 +1,7 @@
 import os
 import json
 import requests
-from flask import Flask, Response, redirect,url_for,request,abort
+from flask import Flask, Response, redirect,url_for,request,abort,jsonify
 
 def get_tocken(corp_id,agent_secret):
     url = f'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid={corp_id}&corpsecret={agent_secret}'
@@ -60,7 +60,7 @@ def pusher(push_sckey_user):
             return Response('push_msg!', mimetype="text/html")
         
         if resp['errmsg'] == 'ok':
-            return resp
+            return jsonify(resp) 
             # return Response('push msg succeed!', mimetype="text/html")
         else:
             return Response('push msg failed!', mimetype="text/html")
