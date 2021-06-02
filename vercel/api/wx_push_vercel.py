@@ -56,7 +56,7 @@ def pusher(push_sckey_user):
             return Response('push_msg!', mimetype="text/html")
         
         if resp['errmsg'] == 'ok':
-            return resp.json()
+            return resp
             # return Response('push msg succeed!', mimetype="text/html")
         else:
             return Response('push msg failed!', mimetype="text/html")
