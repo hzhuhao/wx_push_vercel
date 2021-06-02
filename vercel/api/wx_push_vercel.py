@@ -30,6 +30,10 @@ def push_msg(agent_id,access_token,msg_content):
 
 
 app = Flask(__name__)
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    return Response('wxwork bot running!', mimetype="text/html")
+
 @app.route('/<push_sckey_user>.send', methods=['GET', 'POST'])
 def pusher(push_sckey_user):
     corp_id      = os.getenv('CORP_ID')       # 企业ID
