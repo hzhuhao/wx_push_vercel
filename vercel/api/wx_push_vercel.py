@@ -8,10 +8,26 @@ def get_tocken(corp_id,agent_secret):
     resp = requests.get(url)
     return resp.json()['access_token']
 
-def push_msg(agent_id,access_token,msg_content):
+def push_msg(agent_id,access_token,msg_content, markdown_content):
     url = f'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={access_token}'
     headers = {'Content-Type': 'application/json'}
-    data = {
+    if markdown_content:
+        data = {
+               "touser" : "@all",
+               "toparty" : "",
+               "totag" : "",
+               "msgtype" : "markdown",
+               "agentid" : agent_id,
+               "markdown" : {
+                   "content" : markdown_content
+               },
+               "safe":0,
+               "enable_id_trans": 0,
+               "enable_duplicate_check": 0,
+               "duplicate_check_interval": 1800
+            }
+    else:
+        data = {
                "touser" : "@all",
                "toparty" : "",
                "totag" : "",
@@ -44,8 +60,10 @@ def pusher(push_sckey_user):
     if push_sckey_user == push_sckey :
         if request.method == 'GET':
             msg_content = request.args.get('text')
+            markdown_content = request.args.get('markdown')
         elif request.method == 'POST':
             msg_content = request.form['text']
+            markdown_content = request.form['markdown']
         else:
             return Response('method not right!', mimetype="text/html")
 
@@ -55,7 +73,7 @@ def pusher(push_sckey_user):
         except Exception as e:
             return Response('access_token error!', mimetype="text/html")
         try:
-            resp         = push_msg(agent_id,access_token,msg_content)
+            resp         = push_msg(agent_id,access_token,msg_content,markdown_content)
         except Exception as e:
             return Response('push_msg!', mimetype="text/html")
         
